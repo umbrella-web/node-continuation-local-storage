@@ -32,9 +32,21 @@ Namespace.prototype.set = function (key, value) {
 };
 
 Namespace.prototype.get = function (key) {
-  if (!this.active) return undefined;
 
-  return this.active[key];
+  // return normal value
+  if (this.active !== null && this.active[key] !== undefined) {
+    return this.active[key];
+  // return value from other contexts
+  } else {
+    for(var i = 0; i < this._set.length; i++) {
+      if (this._set[i] !== null && this._set[i][key] !== undefined) {
+        return this._set[i][key]
+      }
+      console.log('Namespace.prototype.get: missing value for ' + key)
+      return undefined;
+    }
+  }
+
 };
 
 Namespace.prototype.createContext = function () {
